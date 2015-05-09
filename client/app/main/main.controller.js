@@ -1,62 +1,84 @@
 'use strict';
 
 angular.module('gdweApp')
-  .controller('MainCtrl', function ($scope, $http, socket, c3Factory, $timeout) {
+  .controller('MainCtrl', function ($scope, $http, socket, c3Factory, $timeout, $interval, $q) {
+
+    $scope.data = [];
+    $scope.columns = [['time'],['vol浓度']];
+    $scope.dataLength = 30;
+    $scope.alarmValue = 350;
 
     $scope.config = {
       data: {
         x: 'time',
         columns: [
             ['time']
-        ]
+        ],
+        type: 'area',
+        labels: true,
+        color: function(color, d){
+          return (d.value > $scope.alarmValue ? '#F00' : color);
+        }
       },
       axis: {
           x: {
-              type: 'timeseries',
-              tick: {
-                  format: '%m/%d',
-              }
+            type: 'timeseries',
+            tick: {
+                format: '%H:%M:%S'
+            }
+          },
+          y: {
+            max: $scope.alarmValue * Math.sqrt(2)
           }
+      },
+      grid: {
+          y: {
+              lines: [{value: $scope.alarmValue}]
+          }
+      },
+      transition: {
+          duration: 0
       }
     };
 
-    $timeout(function(){
+    $scope.chart = c3Factory.get('chart');
 
-      c3Factory.get('chart').then(function(chart) {
-        chart.load({
-          columns: [
-              ['time', '2012-12-29', '2012-12-30', '2012-12-31', '2013-01-01'],
-              ['data1', 230, 300, 330, 111],
-              ['data2', 190, 230, 200, 222],
-              ['data3', 90, 130, 180, 333],
-          ]
-        });
+    $interval(function(){
+
+      loadNewData(new Date()).then(function(data){
+        reload(data);
       });
-
+      
     },1000);
 
+    function loadNewData(time){
+      var defer = $q.defer();
 
-
-    /*$scope.awesomeThings = [];
-
-    $http.get('/api/things').success(function(awesomeThings) {
-      $scope.awesomeThings = awesomeThings;
-      socket.syncUpdates('thing', $scope.awesomeThings);
-    });
-
-    $scope.addThing = function() {
-      if($scope.newThing === '') {
-        return;
+      if($scope.dataLength && $scope.data.length >= $scope.dataLength){
+        $scope.data.splice(0,1);
       }
-      $http.post('/api/things', { name: $scope.newThing });
-      $scope.newThing = '';
-    };
+      $scope.data.push({
+        'time': time,
+        'value': parseInt(Math.random()*500>400?Math.random()*1000:100+Math.random()*50)
+      });
 
-    $scope.deleteThing = function(thing) {
-      $http.delete('/api/things/' + thing._id);
-    };
+      if($scope.dataLength && $scope.columns[0].length > $scope.dataLength){
+        $scope.columns[0].splice(1,1);
+        $scope.columns[1].splice(1,1);
+      }
+      $scope.columns[0].push($scope.data[$scope.data.length-1].time);
+      $scope.columns[1].push($scope.data[$scope.data.length-1].value);
 
-    $scope.$on('$destroy', function () {
-      socket.unsyncUpdates('thing');
-    });*/
+      defer.resolve(time);
+      return defer.promise;
+    }
+
+    function reload(data){
+      $scope.chart.then(function(chart){
+        chart.load({
+          columns: $scope.columns
+        });        
+      });
+    }
+
   });
