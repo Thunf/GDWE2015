@@ -4,7 +4,9 @@
   <div class="row">
     <div class="col-lg-12">
 
-      <c3-chart id="chart" config="realTimeConfig"></c3-chart>
+      <c3-chart id="realTimeChart" config="realTimeConfig"></c3-chart>
+
+      <c3-chart id="totalTimeChart" config="totalTimeConfig" ng-init="getDataByTimeRange(1,2)"></c3-chart>
 
     </div>
   </div>

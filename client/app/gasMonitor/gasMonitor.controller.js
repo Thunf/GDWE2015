@@ -41,22 +41,72 @@ angular.module('gdweApp')
       }
     };
 
-    $scope.chart = c3Factory.get('chart');
+    $scope.totalTimeConfig = {
+      data: {
+        x: 'time',
+        columns: [
+            ['time']
+        ],
+        type: 'area-spline',
+        // labels: true,
+        color: function(color, d){
+          return (d.value > $scope.alarmValue ? '#F00' : color);
+        }
+      },
+      axis: {
+          x: {
+            type: 'timeseries',
+            tick: {
+                format: '%H:%M:%S'
+            }
+          }
+          // y: {
+          //   max: $scope.alarmValue * Math.sqrt(2)
+          // }
+      },
+      grid: {
+          y: {
+              lines: [{value: $scope.alarmValue}]
+          }
+      },
+      transition: {
+          duration: 0
+      },
+	    point: {
+	        show: false
+	    }
+    };
+
+    $scope.realTimeChart = c3Factory.get('realTimeChart');
+    $scope.totalTimeChart = c3Factory.get('totalTimeChart');
+
+    // 单次拉取固定时间数据
+    $scope.getDataByTimeRange = function(from, to){
+
+    	console.log(from, to);
+	    
+      loadNewData({
+    		timeFrom: (new Date() - 10*60*1000).valueOf(),
+    		timeTo: (new Date() - 0*60*1000).valueOf()
+      }).then(function(data){
+        reDraw($scope.totalTimeChart, data);
+      });
+    }
 
     // 循环拉取数据
     var intervalPromise = $interval(function(){
-      loadNewData(new Date()).then(function(data){
-        reDraw(data);
+      loadNewData({count: $scope.dataLength}).then(function(data){
+        reDraw($scope.realTimeChart, data);
       });
     },1000);
 
     // 获取新数据
-    function loadNewData(time){
+    function loadNewData(conditions){
       var defer = $q.defer();
       GasMonitor.save({
         gas_level: parseInt(Math.random()*500>400?Math.random()*1000:100+Math.random()*50),
       },function(newdata){
-        GasMonitor.query({count: $scope.dataLength},function(datas){
+        GasMonitor.query(conditions,function(datas){
           defer.resolve(setData(datas));
         });
       },function(err){
@@ -76,8 +126,8 @@ angular.module('gdweApp')
     }
 
     // 重绘chart
-    function reDraw(data){
-      $scope.chart.then(function(chart){
+    function reDraw(chart, data){
+      chart.then(function(chart){
         chart.load({
           columns: data
         });        
