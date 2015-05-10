@@ -3,10 +3,10 @@
 angular.module('gdweApp')
   .controller('MainCtrl', function ($scope, $http, socket, c3Factory, $timeout, $interval, $q) {
 
-    $scope.data = [];
-    $scope.columns = [['time'],['vol浓度']];
-    $scope.dataLength = 30;
-    $scope.alarmValue = 350;
+    $scope.data = [];                           //总数据 初始化
+    $scope.columns = [['time'],['vol浓度']];    //实时信息轴 初始化
+    $scope.dataLength = 30;                     //实时信息轴 采样数
+    $scope.alarmValue = 350;                    //报警阙值
 
     $scope.config = {
       data: {
