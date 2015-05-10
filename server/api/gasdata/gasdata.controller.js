@@ -5,10 +5,14 @@ var Gasdata = require('./gasdata.model');
 
 // Get list of gasdatas
 exports.index = function(req, res) {
-  Gasdata.find(function (err, gasdatas) {
-    if(err) { return handleError(res, err); }
-    return res.json(200, gasdatas);
-  });
+  console.log(req.params, req.body, req.query);
+  Gasdata.find()
+    .sort({created_time: 'desc'})
+    .limit(req.query.count)
+    .exec(function (err, gasdatas) {
+      if(err) { return handleError(res, err); }
+      return res.json(200, gasdatas);
+    });
 };
 
 // Get a single gasdata
@@ -22,6 +26,7 @@ exports.show = function(req, res) {
 
 // Creates a new gasdata in the DB.
 exports.create = function(req, res) {
+  console.log(req.params, req.body, req.query);
   Gasdata.create(req.body, function(err, gasdata) {
     if(err) { return handleError(res, err); }
     return res.json(201, gasdata);

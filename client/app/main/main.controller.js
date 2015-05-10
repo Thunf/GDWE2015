@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('gdweApp')
-  .controller('MainCtrl', function ($scope, $http, socket, c3Factory, $timeout, $interval, $q) {
+  .controller('MainCtrl', function ($scope, $http, socket, c3Factory, $timeout, $interval, $q, GasMonitor, Auth) {
 
     $scope.data = [];                           //总数据 初始化
     $scope.columns = [['time'],['vol浓度']];    //实时信息轴 初始化
-    $scope.dataLength = 30;                     //实时信息轴 采样数
+    $scope.dataLength = 30;                     //实时信息轴 采样数, 若为0则为数据追加模式
     $scope.alarmValue = 350;                    //报警阙值
 
     $scope.config = {
@@ -43,42 +43,49 @@ angular.module('gdweApp')
 
     $scope.chart = c3Factory.get('chart');
 
-    $interval(function(){
-
+    // 循环拉取数据
+    var intervalPromise = $interval(function(){
       loadNewData(new Date()).then(function(data){
-        reload(data);
+        reDraw(data);
       });
-      
     },1000);
 
+    // 获取新数据
     function loadNewData(time){
       var defer = $q.defer();
-
-      if($scope.dataLength && $scope.data.length >= $scope.dataLength){
-        $scope.data.splice(0,1);
-      }
-      $scope.data.push({
-        'time': time,
-        'value': parseInt(Math.random()*500>400?Math.random()*1000:100+Math.random()*50)
+      GasMonitor.save({
+        gas_level: parseInt(Math.random()*500>400?Math.random()*1000:100+Math.random()*50),
+        creator: angular.isDefined(Auth.getCurrentUser().name)?Auth.getCurrentUser():null
+      },function(newdata){
+        GasMonitor.query({count: $scope.dataLength},function(datas){
+          defer.resolve(setData(datas));
+        });
       });
-
-      if($scope.dataLength && $scope.columns[0].length > $scope.dataLength){
-        $scope.columns[0].splice(1,1);
-        $scope.columns[1].splice(1,1);
-      }
-      $scope.columns[0].push($scope.data[$scope.data.length-1].time);
-      $scope.columns[1].push($scope.data[$scope.data.length-1].value);
-
-      defer.resolve(time);
       return defer.promise;
     }
 
-    function reload(data){
+    // 整理数据
+    function setData(datas){
+      var columns = angular.copy($scope.columns);
+      angular.forEach(datas, function(data){
+        columns[0].push(new Date(data.created_time));
+        columns[1].push(parseInt(data.gas_level));
+      });
+      return columns;
+    }
+
+    // 重绘chart
+    function reDraw(data){
       $scope.chart.then(function(chart){
         chart.load({
-          columns: $scope.columns
+          columns: data
         });        
       });
     }
+
+    // 监听跳转，注销循环
+    $scope.$on('$destroy',function(){
+      $interval.cancel(intervalPromise);
+    })
 
   });
