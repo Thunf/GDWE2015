@@ -3,8 +3,8 @@
 angular.module('gdweApp')
   .controller('NavbarCtrl', function ($scope, $location, Auth) {
     $scope.menu = [{
-      'title': 'Home',
-      'link': '/'
+      'title': '监控',
+      'link': '/gasMonitor'
     }];
 
     $scope.isCollapsed = true;

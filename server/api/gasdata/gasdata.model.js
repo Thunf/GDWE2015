@@ -17,9 +17,6 @@ var GasdataSchema = new Schema({
 		trim: true,
 		required: true
 	}
-	// name: String,
-	// info: String,
-	// active: Boolean
 });
 
 module.exports = mongoose.model('Gasdata', GasdataSchema);

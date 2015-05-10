@@ -26,6 +26,7 @@ exports.show = function(req, res) {
 
 // Creates a new gasdata in the DB.
 exports.create = function(req, res) {
+  req.body.creator = req.user;
   console.log(req.params, req.body, req.query);
   Gasdata.create(req.body, function(err, gasdata) {
     if(err) { return handleError(res, err); }

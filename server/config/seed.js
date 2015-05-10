@@ -7,6 +7,7 @@
 
 var Thing = require('../api/thing/thing.model');
 var User = require('../api/user/user.model');
+var GasData = require('../api/gasdata/gasdata.model');
 
 Thing.find({}).remove(function() {
   Thing.create({
@@ -28,6 +29,10 @@ Thing.find({}).remove(function() {
     name : 'Deployment Ready',
     info : 'Easily deploy your app to Heroku or Openshift with the heroku and openshift subgenerators'
   });
+});
+
+GasData.find({}).remove(function(){
+  console.log("监测数据已清空！");
 });
 
 User.find({}).remove(function() {
