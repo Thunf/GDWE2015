@@ -7,7 +7,9 @@ angular.module('gdweApp', [
   'btford.socket-io',
   'ui.router',
   'ui.bootstrap',
-  'angular-c3'
+  'angular-c3',
+  'ui.bootstrap',
+  'ui.bootstrap.datetimepicker'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider

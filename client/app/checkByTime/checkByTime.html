@@ -1,0 +1,62 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container">
+  <div class="row">
+
+  	<div class="col-md-12 well">
+  		<h3>请选择查询的时间段：
+  			<small class="text-danger">{{(date_from > date_to)?'开始时间不能晚于结束时间！':''}}</small>
+  		</h3>
+  		<div class="row">
+		  	<div class="col-md-4">
+		  		<span class="date-range">开始时间：</span>
+					<span class="dropdown">
+					  <a class="dropdown-toggle" id="dropdown1" role="button" data-toggle="dropdown" data-target="#" href="#">
+					    <div class="input-group">
+					    	<input type="text" id="dropdown11" style="display:none;" class="form-control" data-ng-model="data1.dateDropDownInput">
+					    	<label for="" class="form-control">{{ date_from | date:'yyyy-MM-dd HH:mm'}}</label>
+					    	<span class="input-group-addon">
+					    		<i class="glyphicon glyphicon-calendar"></i>
+					    	</span>
+					    </div>
+					  </a>
+					  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+					    <datetimepicker data-ng-model="date_from" 
+					    	data-datetimepicker-config="{ dropdownSelector: '#dropdown1', startView: 'minute', minuteStep: 10}"/>
+					  </ul>
+					</span>
+		  	</div>
+		  	<div class="col-md-4">
+		  		<span class="date-range">结束时间：</span>
+		  		<span class="dropdown">
+					  <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="#">
+					    <div class="input-group">
+					    	<input type="text" id="dropdown21" style="display:none;" class="form-control" data-ng-model="data2.dateDropDownInput">
+					    	<label for="" class="form-control">{{ date_to | date:'yyyy-MM-dd HH:mm'}}</label>
+					    	<span class="input-group-addon">
+					    		<i class="glyphicon glyphicon-calendar"></i>
+					    	</span>
+					    </div>
+					  </a>
+					  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+					    <datetimepicker data-ng-model="date_to" 
+					    	data-before-render="beforeRender($view, $dates, $leftDate, $upDate, $rightDate)" 
+					    	data-datetimepicker-config="{ dropdownSelector: '#dropdown2', startView: 'minute', minuteStep: 10 }"/>
+					  </ul>
+					</span>
+				</div>
+	  		<div class="col-md-2">
+	  			<div class="btn btn-success" ng-class="{'disabled': (date_from > date_to)}" ng-click="getDataByTimeRange()">立即查询</div>
+	  		</div>
+  		</div>
+  	</div>
+
+    <div class="col-lg-12 well">
+
+      <c3-chart id="totalTimeChart" config="totalTimeConfig" ng-init="getDataByTimeRange()"></c3-chart>
+
+    </div>
+  </div>
+</div>
+
+

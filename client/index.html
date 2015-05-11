@@ -14,6 +14,7 @@
     <!-- build:css(client) app/vendor.css -->
       <!-- bower:css -->
       <link rel="stylesheet" href="bower_components/angular-c3/dist/c3-chart.css" />
+      <link rel="stylesheet" href="bower_components/angular-bootstrap-datetimepicker/src/css/datetimepicker.css" />
       <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css({.tmp,client}) app/app.css -->
@@ -57,7 +58,10 @@
       <script src="bower_components/angular-socket-io/socket.js"></script>
       <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
       <script src="bower_components/angular-c3/dist/c3-chart.js"></script>
+      <script src="bower_components/moment/moment.js"></script>
+      <script src="bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js"></script>
       <!-- endbower -->
+      <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
       <script src="socket.io-client/socket.io.js"></script>
     <!-- endbuild -->
 
@@ -70,6 +74,8 @@
           <script src="app/account/signup/signup.controller.js"></script>
           <script src="app/admin/admin.controller.js"></script>
           <script src="app/admin/admin.js"></script>
+          <script src="app/checkByTime/checkByTime.controller.js"></script>
+          <script src="app/checkByTime/checkByTime.js"></script>
           <script src="app/gasMonitor/gasMonitor.controller.js"></script>
           <script src="app/gasMonitor/gasMonitor.js"></script>
           <script src="app/gasMonitor/gasMonitor.service.js"></script>

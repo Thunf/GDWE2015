@@ -2,12 +2,21 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-lg-12">
-
+    <div class="col-md-9 col-xs-12 well">
       <c3-chart id="realTimeChart" config="realTimeConfig"></c3-chart>
+    </div>
 
-      <c3-chart id="totalTimeChart" config="totalTimeConfig" ng-init="getDataByTimeRange(1,2)"></c3-chart>
+    <div class="col-md-3 col-xs-12">
 
+    	<div class="well">
+    		消息区：
+    	</div>
+
+			<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+				<li>{{(alert.gas_level?'警告：':'实时状况：') + alert.time + ' ' +alert.msg}}</li>
+				<li ng-if="alert.gas_level">浓度：{{alert.gas_level}}</li>
+			</alert>
+    	
     </div>
   </div>
 </div>

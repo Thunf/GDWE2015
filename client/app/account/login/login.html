@@ -2,12 +2,10 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-sm-12">
-      <h1>Login</h1>
-      <p>Accounts are reset on server restart from <code>server/config/seed.js</code>. Default account is <code>test@test.com</code> / <code>test</code></p>
-      <p>Admin account is <code>admin@admin.com</code> / <code>admin</code></p>
+    <div class="col-sm-6 col-sm-offset-3">
+      <h1>登陆</h1>
     </div>
-    <div class="col-sm-12">
+    <div class="col-sm-6 col-sm-offset-3">
       <form class="form" name="form" ng-submit="login(form)" novalidate>
 
         <div class="form-group">
@@ -23,11 +21,11 @@
         </div>
 
         <div class="form-group has-error">
-          <p class="help-block" ng-show="form.email.$error.required && form.password.$error.required && submitted">
-             Please enter your email and password.
+          <p class="help-block" ng-show="((!form.email.$error.email && form.email.$error.required) || form.password.$error.required) && submitted">
+             请输入邮箱和密码
           </p>
           <p class="help-block" ng-show="form.email.$error.email && submitted">
-             Please enter a valid email.
+             请输入正确的邮箱
           </p>
 
           <p class="help-block">{{ errors.other }}</p>
@@ -35,11 +33,11 @@
 
         <div>
           <button class="btn btn-inverse btn-lg btn-login" type="submit">
-            Login
+            登陆
           </button>
-          <a class="btn btn-default btn-lg btn-register" href="/signup">
+          <!-- <a class="btn btn-default btn-lg btn-register" href="/signup">
             Register
-          </a>
+          </a> -->
         </div>
 
       </form>
