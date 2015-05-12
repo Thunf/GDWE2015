@@ -69,15 +69,20 @@ angular.module('gdweApp')
     function loadNewData(conditions){
       var defer = $q.defer();
 
-      GasMonitor.save({
-        gas_level: parseInt(Math.random()*500>400?Math.random()*500:100+Math.random()*50),
-      },function(newdata){
+      // GasMonitor.save({
+      //   gas_level: parseInt(Math.random()*500>400?Math.random()*500:100+Math.random()*50),
+      // },function(newdata){
+
+
         GasMonitor.query(conditions,function(datas){
           defer.resolve(setData(datas));
         });
-      },function(err){
-      	$interval.cancel(intervalPromise);
-      });
+
+
+        
+      // },function(err){
+      // 	$interval.cancel(intervalPromise);
+      // });
 
       return defer.promise;
     }

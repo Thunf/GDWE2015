@@ -22,17 +22,18 @@ exports.index = function(req, res) {
 
   if(req.query && req.query.timeFrom){
     console.log(">>> 按时间额度查询，时间范围：", getTime(req.query.timeFrom), getTime(req.query.timeTo));
-    conditions = {"$and":[
-        {"created_time":{"$gt":new Date(parseInt(req.query.timeFrom))}},
-        {"created_time":{"$lt":new Date(parseInt(req.query.timeTo))}}
-      ]
+
+    conditions = {"created_time":{
+        "$gt":new Date(parseInt(req.query.timeFrom)),
+        "$lt":new Date(parseInt(req.query.timeTo || new Date().getTime()))
+      }
     }
+
   }
 
-  var queryWork = Gasdata.find(conditions).sort({created_time: 'desc'});
+  var queryWork = Gasdata.find(conditions,{_id:0}).sort({created_time: 'desc'});
 
   if(req.query && req.query.count){
-    console.log(">>> 实时查询，限量：",req.query.count);
     queryWork.limit(req.query.count);
   }
     

@@ -31,9 +31,9 @@ Thing.find({}).remove(function() {
   });
 });
 
-GasData.find({}).remove(function(){
-  console.log("监测数据已清空！");
-});
+// GasData.find({}).remove(function(){
+//   console.log("监测数据已清空！");
+// });
 
 User.find({}).remove(function() {
   User.create({
